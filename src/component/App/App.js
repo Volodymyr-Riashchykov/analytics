@@ -5,13 +5,18 @@ import ContactList from "../ContactList/ContactList";
 import { v4 as uuidv4 } from 'uuid';
 import Filtr from "../Filter/Filter";
 import axios from "axios";
+import Modal from "../Modal/Modal"
+import Spinner from "../Spinner/Spinner";
+import ResultList from "../../ResultList/ResultList";
 
 // const serverURL = 'http://localhost:3005';
 const serverURL = 'https://analitserver.herokuapp.com'
 
 export default function App() {
   const [result, setResult] = useState([]);
-  const [isReq,setIsReq] = useState(false)
+  const [isReq, setIsReq] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+  
   // const [contacts, setContacts] = useState(() => {
   //   return JSON.parse(localStorage.getItem("contacts")) ?? [];
   // });
@@ -47,8 +52,16 @@ export default function App() {
   };
   //http://localhost:3005
   // const deleteContact = (id) => setContacts(contacts.filter((contact) => contact.id !== id));
-    const deleteContact = () => {}
-
+  const deleteContact = (id) => {
+    // const res = result.filter((r) => {
+    //   // r.forEach(el => {
+    //   //   el._id === id;
+    //   // });
+    //   r[1]._id === id
+    // })
+    setIsModal(true)
+  }
+    const closeModal = () => {setIsModal(false)}
   // const changeFilter = (e) => {
   //   setFilter(e.currentTarget.value);
   // };
@@ -64,7 +77,7 @@ export default function App() {
         <h1>Analytics</h1>
         <AddContact handleAddContact={handleAddContact} />
         <h2>Result</h2>
-        
+        {isReq && (<h4><Spinner /></h4>)}
         {result.length > 0 ?
           <>
             {/* <Filtr value={filter} onChange={changeFilter}/> */}
@@ -73,8 +86,10 @@ export default function App() {
           </>
         : (<h4>Your result is empty</h4>)
         }
-        {isReq && (<h4>загрузка</h4>)}
         
+        {isModal && (<Modal onClose={closeModal} >
+                    {<ResultList />}
+          </Modal>)}
       </div>
     );
 }
