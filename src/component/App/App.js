@@ -8,6 +8,8 @@ import axios from "axios";
 import Modal from "../Modal/Modal"
 import Spinner from "../Spinner/Spinner";
 import ResultList from "../../ResultList/ResultList";
+import FormPropsTextFields from "../TextField/TextField"
+import OutputList from "../OutputList/OutputList"
 
 // const serverURL = 'http://localhost:3005';
 const serverURL = 'https://analitserver.herokuapp.com'
@@ -16,6 +18,12 @@ export default function App() {
   const [result, setResult] = useState([]);
   const [isReq, setIsReq] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [per, setPer] = useState([]);
+  const [sum, setSum] = useState(0);
+  const [ras, setRas] = useState(0);
+  const [nes, setNes] = useState(0);
+  const [summa, setSumma] = useState(0);
+  const [rasn, setRasn] = useState(0);
   
   // const [contacts, setContacts] = useState(() => {
   //   return JSON.parse(localStorage.getItem("contacts")) ?? [];
@@ -43,12 +51,15 @@ export default function App() {
     //   const a = await axios.post('http://localhost:3005/bur')
     //   console.log('a=',a);
     // }
+    setPer(per)
     setIsReq(true)
     const a = await axios.post(serverURL+'/bur',  per );
-    console.log("a=", a.data);
-    console.log("a0=", a.data[0]);
+    // console.log("a=", a.data);
+    // console.log("a0=", a.data[0]);
     setResult(a.data)
     setIsReq(false)
+    
+    // console.log("a=", result);
   };
   //http://localhost:3005
   // const deleteContact = (id) => setContacts(contacts.filter((contact) => contact.id !== id));
@@ -75,14 +86,16 @@ export default function App() {
     return (
       <div className={style.container}>
         <h1>Analytics</h1>
+        {/* <FormPropsTextFields /> */}
         <AddContact handleAddContact={handleAddContact} />
         <h2>Result</h2>
         {isReq && (<h4><Spinner /></h4>)}
         {result.length > 0 ?
           <>
             {/* <Filtr value={filter} onChange={changeFilter}/> */}
+            
+            <OutputList result = {result} per={per} />
             <ContactList contacts={result} delet={deleteContact} />
-            {/* (<h3>Количество: {result.length}</h3>) */}
           </>
         : (<h4>Your result is empty</h4>)
         }
