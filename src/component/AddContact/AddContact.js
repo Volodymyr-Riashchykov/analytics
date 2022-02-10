@@ -6,15 +6,15 @@ import { serverURL } from "../App/App";
 
 export default function AddContact({ handleAddContact }) {
     
-    const [flame_s, setFlameS] = useState("10");
+    const [flame_s, setFlameS] = useState("0");
     const [flame_e, setFlamesE] = useState("20");
-    const [candle_s, setCandleS] = useState("80");
-    const [candle_e, setCandleE] = useState("80.03");
+    const [candle_s, setCandleS] = useState("0");
+    const [candle_e, setCandleE] = useState("20.03");
     const [date_s, setDateS] = useState("");
     const [date_e, setDateE] = useState("");
-    const [win, setWin] = useState("15");
-    const [loss, setLoss] = useState("15");
-    const [symbol, setSymbol] = useState("BTC/USDT");
+    const [win, setWin] = useState("3");
+    const [loss, setLoss] = useState("2");
+    const [symbol, setSymbol] = useState("BTC-USDT");
     
     useEffect(async() => {
         const b = (await axios.get(serverURL+'/dates'));
@@ -24,14 +24,14 @@ export default function AddContact({ handleAddContact }) {
     },[])
 
     const hahdleChange = e => {
-        if (e.currentTarget.name === "пламя нач.") setFlameS(e.currentTarget.value);
-        if (e.currentTarget.name === "пламя кон.") setFlamesE(e.currentTarget.value);
-        if (e.currentTarget.name === "свеча нач.") setCandleS(e.currentTarget.value);
-        if (e.currentTarget.name === "свеча кон.") setCandleE(e.currentTarget.value);
+        if (e.currentTarget.name === "тень нач.") setFlameS(e.currentTarget.value);
+        if (e.currentTarget.name === "тень кон.") setFlamesE(e.currentTarget.value);
+        if (e.currentTarget.name === "тело нач.") setCandleS(e.currentTarget.value);
+        if (e.currentTarget.name === "тело кон.") setCandleE(e.currentTarget.value);
         if (e.currentTarget.name === "дата нач.") setDateS(e.currentTarget.value);
         if (e.currentTarget.name === "дата кон.") setDateE(e.currentTarget.value);
-        if (e.currentTarget.name === "выигрыш") setWin(e.currentTarget.value);
-        if (e.currentTarget.name === "проигрыш") setLoss(e.currentTarget.value);
+        if (e.currentTarget.name === "take profit") setWin(e.currentTarget.value);
+        if (e.currentTarget.name === "stop loss") setLoss(e.currentTarget.value);
         if (e.currentTarget.name === "пара") setSymbol(e.currentTarget.value);
     }
 
@@ -65,10 +65,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //flame
-                        name="пламя нач."
+                        name="тень нач."
                         value={flame_s}
                         hahdleChange={hahdleChange}
-                        title="Величина 'пламя' свечи, в %, до 100, разделитель точка"
+                        title="Начальная величина 'тени' свечи, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="23.45"
                         size="5"
@@ -78,10 +78,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //candle
-                        name="пламя кон."
+                        name="тень кон."
                         value={flame_e}
                         hahdleChange={hahdleChange}
-                        title="Величина свечи, в %, до 100, разделитель точка"
+                        title="Конечная величина 'тени' свечи, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="63.08"
                         size="5"
@@ -90,10 +90,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //flame
-                        name="свеча нач."
+                        name="тело нач."
                         value={candle_s}
                         hahdleChange={hahdleChange}
-                        title="Величина 'пламя' свечи, в %, до 100, разделитель точка"
+                        title="Начальная величина свечи, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="23.45"
                         size="5"
@@ -103,10 +103,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //candle
-                        name="свеча кон."
+                        name="тело кон."
                         value={candle_e}
                         hahdleChange={hahdleChange}
-                        title="Величина свечи, в %, до 100, разделитель точка"
+                        title="Конечная величина свечи, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="63.08"
                         size="5"
@@ -120,7 +120,7 @@ export default function AddContact({ handleAddContact }) {
                         name="дата нач."
                         value={date_s}
                         hahdleChange={hahdleChange}
-                        title="Величина 'пламя' свечи, в %, до 100, разделитель точка"
+                        title="Начало временного отрезка"
                         pattern=""
                         placeholder="2022-01-22T22:00:00.000+00:00"
                         size="35"
@@ -133,7 +133,7 @@ export default function AddContact({ handleAddContact }) {
                         name="дата кон."
                         value={date_e}
                         hahdleChange={hahdleChange}
-                        title="Величина свечи, в %, до 100, разделитель точка"
+                        title="Конец временного отрезка"
                         pattern=""
                         placeholder="2022-01-22T22:00:00.000+00:00"
                         size="35"
@@ -145,10 +145,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //flame
-                        name="выигрыш"
+                        name="take profit"
                         value={win}
                         hahdleChange={hahdleChange}
-                        title="Величина 'пламя' свечи, в %, до 100, разделитель точка"
+                        title="Величина выигрыша, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="23.45"
                         size="5"
@@ -158,10 +158,10 @@ export default function AddContact({ handleAddContact }) {
                     <AddContactInput
                         type="text"
                         //candle
-                        name="проигрыш"
+                        name="stop loss"
                         value={loss}
                         hahdleChange={hahdleChange}
-                        title="Величина свечи, в %, до 100, разделитель точка"
+                        title="Величина проигрыша, в %, до 100, разделитель точка"
                         pattern="\d{1,2}(\.\d{0,2})?"
                         placeholder="63.08"
                         size="5"
@@ -173,7 +173,7 @@ export default function AddContact({ handleAddContact }) {
                         name="пара"
                         value={symbol}
                         hahdleChange={hahdleChange}
-                        title="Величина 'пламя' свечи, в %, до 100, разделитель точка"
+                        title="Выбор монет"
                         pattern="^[a-zA-Z]'/'[a-zA-Z]"
                         placeholder="BTC/USDT"
                         size="12"

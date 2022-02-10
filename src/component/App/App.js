@@ -10,6 +10,8 @@ import Spinner from "../Spinner/Spinner";
 import ResultList from "../../ResultList/ResultList";
 import FormPropsTextFields from "../TextField/TextField"
 import OutputList from "../OutputList/OutputList"
+import CollapsibleTable from "../TableList/TableList";
+import CandleList from "../CandleList/CandleList";
 
 // const serverURL = 'http://localhost:3005';
 const serverURL = 'https://analitserver.herokuapp.com'
@@ -19,11 +21,11 @@ export default function App() {
   const [isReq, setIsReq] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [per, setPer] = useState([]);
-  const [sum, setSum] = useState(0);
-  const [ras, setRas] = useState(0);
-  const [nes, setNes] = useState(0);
-  const [summa, setSumma] = useState(0);
-  const [rasn, setRasn] = useState(0);
+  // const [sum, setSum] = useState(0);
+  // const [ras, setRas] = useState(0);
+  // const [nes, setNes] = useState(0);
+  // const [summa, setSumma] = useState(0);
+  // const [rasn, setRasn] = useState(0);
   
   // const [contacts, setContacts] = useState(() => {
   //   return JSON.parse(localStorage.getItem("contacts")) ?? [];
@@ -34,7 +36,7 @@ export default function App() {
   //   window.localStorage.setItem("contacts", JSON.stringify(contacts));
   // }, [contacts]);
 
-  const handleAddContact =async (per) => {
+  const handleAddContact =async (perem) => {
     // const contact = {
     //   id: uuidv4(),
     //   name,
@@ -51,12 +53,13 @@ export default function App() {
     //   const a = await axios.post('http://localhost:3005/bur')
     //   console.log('a=',a);
     // }
-    setPer(per)
+    setPer([...per,perem])
+    console.log('per=',per);
     setIsReq(true)
-    const a = await axios.post(serverURL+'/bur',  per );
+    const a = await axios.post(serverURL+'/bur',  perem );
     // console.log("a=", a.data);
     // console.log("a0=", a.data[0]);
-    setResult(a.data)
+    setResult([...result,a.data])
     setIsReq(false)
     
     // console.log("a=", result);
@@ -87,15 +90,19 @@ export default function App() {
       <div className={style.container}>
         <h1>Analytics</h1>
         {/* <FormPropsTextFields /> */}
+        <CandleList handleAddContact={handleAddContact} />
         <AddContact handleAddContact={handleAddContact} />
         <h2>Result</h2>
+        
         {isReq && (<h4><Spinner /></h4>)}
         {result.length > 0 ?
           <>
             {/* <Filtr value={filter} onChange={changeFilter}/> */}
-            
-            <OutputList result = {result} per={per} />
-            <ContactList contacts={result} delet={deleteContact} />
+            <CollapsibleTable
+              result={result}
+              per={per} />
+            {/* <OutputList result = {result} per={per} /> */}
+            {/* <ContactList contacts={result} delet={deleteContact} /> */}
           </>
         : (<h4>Your result is empty</h4>)
         }
