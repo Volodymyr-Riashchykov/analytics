@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import style from './App.module.css'
-import AddContact from "../AddContact/AddContact";
-import ContactList from "../ContactList/ContactList";
-import { v4 as uuidv4 } from 'uuid';
-import Filtr from "../Filter/Filter";
 import axios from "axios";
 import Modal from "../Modal/Modal"
 import Spinner from "../Spinner/Spinner";
 import ResultList from "../../ResultList/ResultList";
-import FormPropsTextFields from "../TextField/TextField"
-import OutputList from "../OutputList/OutputList"
-import CollapsibleTable from "../TableList/TableList";
+// import CollapsibleTable from "../TableList/TableList";
 import CandleList from "../CandleList/CandleList";
+import HighStock from "../Highcharts/Highcharts";
+import DataTables from "../DataGrid/Grids";
+import DataTable from "../DataGrid/DataGrid";
+import s from '../Highcharts/Highcharts.module.css'
 
+const serverURL = 'http://91.210.37.162:7272'
+// const serverURL = 'http://91.210.37.162:4444'
 // const serverURL = 'http://localhost:3005';
-const serverURL = 'https://analitserver.herokuapp.com'
+// const serverURL = 'https://analitserver.herokuapp.com'
 
 export default function App() {
   const [result, setResult] = useState([]);
@@ -37,32 +37,22 @@ export default function App() {
   // }, [contacts]);
 
   const handleAddContact =async (perem) => {
-    // const contact = {
-    //   id: uuidv4(),
-    //   name,
-    //   number,
-    // };
-    // if (
-    //   contacts.find(
-    //     (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    //   )
-    // ) {
-    //   alert(`${name} is already in contacts.`);
-    // } else {
-    //   setContacts((contacts) => [contact, ...contacts]);
-    //   const a = await axios.post('http://localhost:3005/bur')
-    //   console.log('a=',a);
-    // }
-    setPer([...per,perem])
-    console.log('per=',per);
+    try {
+      setPer([perem,...per])
+    // console.log('per=',per);
     setIsReq(true)
     const a = await axios.post(serverURL+'/bur',  perem );
     // console.log("a=", a.data);
     // console.log("a0=", a.data[0]);
-    setResult([...result,a.data])
+    setResult([a.data,...result])
     setIsReq(false)
     
     // console.log("a=", result);
+    } catch (error) {
+      alert(error);
+      setIsReq(false)
+    }
+    
   };
   //http://localhost:3005
   // const deleteContact = (id) => setContacts(contacts.filter((contact) => contact.id !== id));
@@ -75,7 +65,14 @@ export default function App() {
     // })
     setIsModal(true)
   }
-    const closeModal = () => {setIsModal(false)}
+  const closeModal = () => { setIsModal(false) }
+  
+  const deleteRes = (id) => {
+
+    setResult(state => state.filter((item, i) => i !== id));
+    setPer(state => state.filter((item, i) => i !== id));
+  
+  };
   // const changeFilter = (e) => {
   //   setFilter(e.currentTarget.value);
   // };
@@ -85,22 +82,33 @@ export default function App() {
   //     contact.name.toLowerCase().includes(filter.toLowerCase())
   //   );
   // };
+  // HighStock();
 
     return (
       <div className={style.container}>
         <h1>Analytics</h1>
+        {/* <DataTables /> */}
         {/* <FormPropsTextFields /> */}
-        <CandleList handleAddContact={handleAddContact} />
-        <AddContact handleAddContact={handleAddContact} />
+        <CandleList handleAddContact={handleAddContact} loading={isReq} />
+        {/* <AddContact handleAddContact={handleAddContact} /> */}
         <h2>Result</h2>
         
-        {isReq && (<h4><Spinner /></h4>)}
+        {/* {isReq && (<h4><Spinner /></h4>)} */}
         {result.length > 0 ?
           <>
             {/* <Filtr value={filter} onChange={changeFilter}/> */}
-            <CollapsibleTable
-              result={result}
-              per={per} />
+            {/* {!isReq && <CollapsibleTable
+              result={result}!isReq &&
+              per={per} />} */}
+            {
+              <>
+              {/* <div id="container" className={s.container}></div> */}
+              <DataTable result={result}
+              per={per}
+              deleteRes={deleteRes} />
+            </>
+            }
+             {/* <HighStock /> */}
             {/* <OutputList result = {result} per={per} /> */}
             {/* <ContactList contacts={result} delet={deleteContact} /> */}
           </>
